@@ -1,0 +1,165 @@
+@import url('node_modules/font-awesome/css/font-awesome.css');
+
+@font-face {
+  font-family: 'FontAwesome';
+  font-style: normal;
+  font-weight: 700;
+  src: url(node_modules/font-awesome/fonts/fontawesome-webfont.woff2) format('woff2');
+}
+
+.reveal .fa-ul {
+    list-style-type: none;
+}
+
+/*
+ * A nice listing
+ */
+
+.reveal .listing {
+    counter-reset: my-badass-counter;
+    font-size: 1.2em;
+    padding-top: 1em;
+    padding-left: 1em;
+    list-style-type: none;
+}
+
+.reveal .listing li {
+    position: relative;
+    padding-left: 2.5em;
+    padding-bottom: 1em;
+}
+
+.reveal .listing li:before {
+    content: counter(my-badass-counter);
+    counter-increment: my-badass-counter;
+    position: absolute;
+    left: 0;
+    top: -0.15em;
+    font-weight: bold;
+    font-size: 2.5em;
+}
+
+/*
+ * Headings with black shadow
+ */
+
+.reveal h1.stand {
+    text-shadow: -6px 0 #000, 0 6px #000, 6px 0 #000, 0 -6px #000;
+    color: white;
+}
+
+/*
+ * Clear white slides
+ */
+
+html.clear body {
+    background: none;
+    background-color: none;
+}
+
+html.clear .reveal {
+    color: #000;
+    background: white;
+}
+
+/*
+ * Reasons table
+ */
+
+table.reasons td {
+    max-width: 200px;
+    font-size: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+ul.reasons li {
+    padding: 0.7em;
+}
+
+ul.reasons li i {
+    font-size: 2em;
+}
+
+ul.reasons li.fragment.visible {
+    padding: 0;
+}
+
+ul.reasons li.fragment.visible span {
+    font-weight: bold;
+    font-size: 2em;
+}
+
+p.reasons i {
+    font-size: 2em;
+    position: relative;
+    top: 15px;
+    padding-right: 0.5em;
+}
+
+.reveal .redhat-logo {
+    position: absolute;
+    bottom: 50px;
+    left: 50px;
+    height: 34px;
+    width: 105px;
+    background-image: url('images/redhat-name.png');
+    background-position: 50% 50%;
+    background-size: cover;
+    z-index: 2;
+}
+
+.reveal .credits {
+    margin-top: 2em;
+    text-align: left;
+    font-size: 0.5em;
+}
+
+.reveal .questions {
+    text-align: left;
+}
+
+.reveal .questions h1 {
+    margin-bottom: 1em;
+}
+
+.reveal table.contact {
+    background-color: #5c2d91;
+    width: 100%;
+}
+
+.reveal .contact td {
+    font-size: 0.6em;
+    font-weight: bold;
+    border: none;
+    padding: 0.5em;
+    width: 50%;
+}
+
+.reveal .contact img {
+    vertical-align: middle;
+    margin: 0px 15px;
+}
+
+html.overlay .slides {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+    transform: translate(-50%, -50%) !important;
+}
+
+html.overlay .reveal section {
+    top: 83% !important;
+    left: 0px !important;
+    right: 0px !important;
+    bottom: 0px !important;
+    width: 100% !important;
+    color: #000;
+    position: absolute;
+    background-color: #fff;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 0;
+}

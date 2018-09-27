@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="pikestreet.css">
+<title>Using Machine Learning to find Linux bugs</title>
+<script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'node_modules/reveal.js/css/print/pdf.css' : 'node_modules/reveal.js/css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild( link );
+</script>
+</head>
+<body>
+
+<div class="reveal">
+
+<div class="redhat-logo"></div>
+
+<div class="slides">
+
+    <section data-state="title">
+        <h2>Using Machine Learning</h2>
+        <h1 class="comment">to find Linux bugs</h1>
+        <br>
+        <div style="margin-left: 5em; margin-right: 5em;">
+            <img style="float: left; margin-left: 1em;" src="images/rh-summit-speak.png">
+            <h3 style="font-weight: normal;"><strong>Stef Walter</strong></h3>
+            <p>Red Hat</p>
+        </div>
+        <aside class="notes">
+        </aside>
+    </section>
+
+    <section>
+        <p>&ldquo;Any sufficiently complex system will have bugs. Bugs are entropy,
+	and entropy is fundamental to this universe.&rdquo;<br>
+	<span class="comment">&mdash; Martin Pitt</span></p>
+    </section>
+
+    <section>
+	<p>Any sufficiently complete testing system<br>
+	   will be "plagued" by test flakes</p>
+    </section>
+
+    <section>
+        Total Runs:     2,466,742
+        Test Failures:    122,555
+	Test Flakes:       54,371
+        Test Flakes:       25,420
+
+        Data from last 90 days:
+        https://images-cockpit.apps.ci.centos.org/tests-train-1.jsonl.gz
+    </section>
+
+    <section>
+        <p>Testing <span class="comment">flakes are those bugs</span>. That entropy.</p>
+    </section>
+
+    <section>
+        This is a source of training data. We can watch what humans do.
+        {
+            "pull": "https://api.github.com/repos/cockpit-project/cockpit/pulls/9230",
+            "revision": "2e4fd7d309b7f1c591c099e4041f8db20459c5ae",
+            "status": "failure",
+            "context": "verify/fedora-27",
+            "date": "2018-05-24T15:48:53Z",
+            "merged": true,
+            "test": "testTeamActive (check_networking_team.TestNetworking)",
+            "url": "http://fedorapeople.org/groups/cockpit/logs/pull-9230-20180524-150404-2e4fd7d3-verify-fedora-27/log",
+            "tracker": "https://api.github.com/repos/cockpit-project/cockpit/issues/8905",
+            "log": "...Error: timeout\nwait_js_cond(ph_in_text(\"#network-interface .panel:contains('tteam')\""
+         }
+    </section>
+
+    <section>
+        The tests are essentially fuzzing Linux.
+    </section>
+
+    <!--
+    <section>
+        <section data-state="complex">
+            <table class="reasons">
+                <thead>
+                    <th colspan="5" class="comment">
+                        90+ APIs: File, Command, REST, DBus, Socket
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>abrt</td>
+                        <td>AppStream</td>
+                        <td>apt-get</td>
+                        <td>atomic</td>
+                        <td>Candlepin /candlepin/</td>
+                    </tr><tr>
+                        <td>chpasswd</td>
+                        <td>CloudForms</td>
+                        <td>cryptsetup</td>
+                        <td>curl</td>
+                        <td>dbus-daemon</td>
+                    </tr><tr>
+                        <td>device-mapper</td>
+                        <td>docker-storage-setup</td>
+                        <td>docker</td>
+                        <td>e2fsprogs</td>
+                        <td>etcd</td>
+                    </tr><tr>
+                        <td>/etc/kdump.conf</td>
+                        <td>/etc/passwd</td>
+                        <td>firewalld</td>
+                        <td>FreeIPA</td>
+                        <td>GnuTLS</td>
+                    </tr><tr>
+                        <td>GSSAPI</td>
+                        <td>hostnamed</td>
+                        <td>ipa-client</td>
+                        <td>ipa-client</td>
+                        <td>iproute</td>
+                    </tr><tr>
+                        <td>iptables</td>
+                        <td>iscsi-tools</td>
+                        <td>journalctl</td>
+                        <td>kdump</td>
+                        <td>klist</td>
+                    </tr><tr>
+                        <td>krb5</td>
+                        <td>Kubernetes /api/</td>
+                        <td>lastlog</td>
+                        <td>libvirt</td>
+                        <td>loginctl</td>
+                    </tr><tr>
+                        <td>lvm</td>
+                        <td>mdadm</td>
+                        <td>NetworkManager</td>
+                        <td>NetworkManager-team</td>
+                        <td>oddjob</td>
+                    </tr><tr>
+                        <td>Openshift /oapi/</td>
+                        <td>Openshift OAuth2</td>
+                        <td>openssl</td>
+                        <td>ostree</td>
+                        <td>oVirt /api/</td>
+                    </tr><tr>
+                        <td>PackageKit</td>
+                        <td>passwd</td>
+                        <td>PCP</td>
+                        <td>PolicyKit</td>
+                        <td>/proc/meminfo... </td>
+                    </tr><tr>
+                        <td>/proc/mounts</td>
+                        <td>/proc/net/dev...</td>
+                        <td>procps-ng</td>
+                        <td>/proc/stat</td>
+                        <td>pwquality</td>
+                    </tr><tr>
+                        <td>qemu</td>
+                        <td>realmd</td>
+                        <td>rm ...</td>
+                        <td>rpmostreed</td>
+                        <td>rpm</td>
+                    </tr><tr>
+                        <td>selinux-policy-targeted</td>
+                        <td>selinux-utils</td>
+                        <td>setenforce</td>
+                        <td>Setroubleshootd</td>
+                        <td>shadow-utils</td>
+                    </tr><tr>
+                        <td>shutdown</td>
+                        <td>sosreport</td>
+                        <td>ssh-agent</td>
+                        <td>sshd</td>
+                        <td>ssh-keygen</td>
+                    </tr><tr>
+                        <td>ssh</td>
+                        <td>sssd</td>
+                        <td>storaged</td>
+                        <td>subscription-manager</td>
+                        <td>sudo</td>
+                    </tr><tr>
+                        <td>/sys/fs/cgroup</td>
+                        <td>/sys/kernel</td>
+                        <td>/sys/power</td>
+                        <td>systemd</td>
+                        <td>timedated</td>
+                    </tr><tr>
+                        <td>Tuned</td>
+                        <td>udev</td>
+                        <td>UDisks2</td>
+                        <td>/usr/bin/kubectl</td>
+                        <td>/usr/bin/timedatectl</td>
+                    </tr><tr>
+                        <td>/usr/bin/virt-install</td>
+                        <td>/var/log/wtmp</td>
+                        <td>/var/run/utmp</td>
+                        <td>virsh</td>
+                        <td>who/w</td>
+                    </tr><tr>
+                        <td>xfsprogs</td>
+                        <td>yum</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </section>
+    -->
+
+    <section>
+        <section>
+            <img src="images/cc-wikipedia-chire-SLINK-Gaussian-data.png" width="800px">
+        </section>
+
+        <section>
+            <h2 class="comment">ML techniques in use</h2>
+            <ul>
+                <li>Term Frequency - Inverse Document Frequency</li>
+                <li>Normalized Compression Distance</li>
+                <li>DBSCAN unsupervised clustering</li>
+                <li>K-nearest Neighbors classification</li>
+            </ul>
+        </section>
+
+        <section>
+            <img src="images/Screenshot-2018-1-27 Cockpit Integration Tests.png" width="1200px">
+        </section>
+
+        <section>
+            <h2 class="comment">Term Frequency - Inverse Document Frequency</h2>
+<pre><code># ----------------------------------------------------------------------
+# testTeam (check_networking_team.TestNetworking)
+#
+NAME         UUID                                  TYPE            DEVICE 
+System eth0  5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03  802-3-ethernet  eth0   
+virbr0       82404faf-cb6b-4f4c-8eb6-65fc1a2ff8da  bridge          virbr0 
+System eth1  9c92fad9-6ecb-3e6c-eb4d-8a47c6f50c04  802-3-ethernet  --     
+
+52:54:01:00:00:03 -&gt; eth2
+52:54:01:00:00:03 -&gt; eth2
+52:54:01:00:00:04 -&gt; eth3
+52:54:01:00:00:04 -&gt; eth3
+not ok 139 testTeam (check_networking_team.TestNetworking) duration: 106s
+Traceback (most recent call last):
+  File \"/build/cockpit/bots/../test/verify/check-networking-team\", line 81, in testTeam
+    b.wait_present(\"#network-interface-slaves tr[data-interface='%s']\" % iface1)
+  File \"/build/cockpit/test/common/testlib.py\", line 230, in wait_present
+    return self.wait_js_func('ph_is_present', selector)
+  File \"/build/cockpit/test/common/testlib.py\", line 224, in wait_js_func
+    return self.phantom.wait(\"%s(%s)\" % (func, ','.join(map(jsquote, args))))
+  File \"/build/cockpit/test/common/testlib.py\", line 821, in <lambda>
+    return lambda *args: self._invoke(name, *args)
+  File \"/build/cockpit/test/common/testlib.py\", line 847, in _invoke
+    raise Error(res['error'])
+Error: timeout
+
+Wrote TestNetworking-testTeam-rhel-7-127.0.0.2-2601-FAIL.png
+Wrote TestNetworking-testTeam-rhel-7-127.0.0.2-2601-FAIL.html
+Journal extracted to TestNetworking-testTeam-rhel-7-127.0.0.2-2601-FAIL.log
+Journal extracted to TestNetworking-testTeam-fedora-26-127.0.0.2-2602-FAIL.log</code></pre>
+
+<pre><code># testTeam (check_networking_team.TestNetworking)
+NAME         UUID                                  TYPE            DEVICE
+System eth000  000fb000bd000-000bb000-000ffb-000f000-d000edd000f000e000  000-000-ethernet  eth000
+virbr000       000faf-cb000b-000f000c-000eb000-000fc000a000ff000da  bridge          virbr000
+System eth000  000c000fad000-000ecb-000e000c-eb000d-000a000c000f000c000  000-000-ethernet  --
+File "check-networking-team", line 000, in testTeam
+b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</code></pre>
+        </section>
+
+        <section>
+            <h2 class="comment">Normalized Compression Distance</h2>
+            <img src="images/ncd.png">
+<pre class="fragment"><code>Z = lambda v: len(zlib.compress(v))</code></pre>
+        </section>
+
+        <section>
+            <h2 class="comment">DBSCAN</h2>
+            <p>Density-based spatial clustering of applications with noise</p>
+            <img src="images/1280px-DBSCAN-Illustration.svg.png">
+        </section>
+
+        <section>
+            <h2 class="comment">k-nearest neighbor</h2>
+            <img src="images/20130502162127782.jpg">
+        </section>
+
+        <section>
+            <h1>I want!</h1>
+        </section>
+
+        <section>
+<pre><code>$ <strong>bots/image-download --state tests-learn-1.gz</strong>
+...
+$ <strong>bots/learn-tests --dry</strong>
+Loading existing tests data
+14208: Items to train
+...
+100933632: Computed distances in 1181 seconds on 32 cores
+332: Clusters (13962 items, 246 noise)
+</code></pre>
+
+<pre><code>$ <strong>cat example-test.log | bots/tests-policy fedora-27</strong>
+...
+...
+# Flake probability: 100.0% (neural network)
+# Flake likely 58.6% (clustering)
+</code></pre>
+        </section>
+
+    </section>
+
+        <section>
+            <h3 class="comment">Try out Machine Learning</h3>
+            <p>Use <code><a href="http://scikit-learn.org/">scikit-learn</a></code></p>
+        </section>
+
+    <section>
+	What's next
+	* Containerizing this
+	* Allowing other projects to use it
+    </section>
+
+
+    <section>
+	<p>Ludicrous Claim: Any testing system that does not
+	   have enough flakes, should introduce more tests or more mutations.</p>
+    </section>
+
+    <section data-state="title">
+        <div class="questions">
+        <h1 class="alt">Questions?</h1>
+        <br><br>
+        <h3 class="comment">cockpit-project.org</h3>
+        <h3 class="comment">#cockpit on FreeNode</h3>
+        <p><tt></tt></p>
+        <p class="credits">
+        <span class="comment">Credits:</span><br>
+        Clusters: Chire on Wikipedia<br>
+        </p>
+        </div>
+    </section>
+
+</div>
+</div>
+
+<script src="node_modules/reveal.js/lib/js/head.min.js"></script>
+<script src="node_modules/reveal.js/js/reveal.js"></script>
+<script src="node_modules/d3/d3.js"></script>
+<script src="slides.js"></script>
+
+</body>
+</html>
