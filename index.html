@@ -23,11 +23,10 @@
 <div class="slides">
 
     <section data-state="title">
-        <h2>Using Machine Learning</h2>
-        <h1 class="comment">to find Linux bugs</h1>
+        <h1>Machine Learning</h1>
+        <h1 class="comment">finding Linux bugs</h1>
         <br>
         <div style="margin-left: 5em; margin-right: 5em;">
-            <img style="float: left; margin-left: 1em;" src="images/rh-summit-speak.png">
             <h3 style="font-weight: normal;"><strong>Stef Walter</strong></h3>
             <p>Red Hat</p>
         </div>
@@ -47,13 +46,17 @@
     </section>
 
     <section>
-        Total Runs:     2,466,742
-        Test Failures:    122,555
-	Test Flakes:       54,371
-        Test Flakes:       25,420
+        <pre>
+Total Runs:     2,466,742
+Test Failures:    122,555
+Test Flakes:       54,371
+Test Flakes:       25,420
+        </pre>
 
-        Data from last 90 days:
-        https://images-cockpit.apps.ci.centos.org/tests-train-1.jsonl.gz
+        <div style="text-align: left">
+            <p>Data from last 90 days:<br>
+            <a href="https://images-cockpit.apps.ci.centos.org/tests-train-1.jsonl.gz">https://images-cockpit.apps.ci.centos.org/tests-train-1.jsonl.gz</a></p>
+        </div>
     </section>
 
     <section>
@@ -62,22 +65,29 @@
 
     <section>
         This is a source of training data. We can watch what humans do.
-        {
-            "pull": "https://api.github.com/repos/cockpit-project/cockpit/pulls/9230",
-            "revision": "2e4fd7d309b7f1c591c099e4041f8db20459c5ae",
-            "status": "failure",
-            "context": "verify/fedora-27",
-            "date": "2018-05-24T15:48:53Z",
-            "merged": true,
-            "test": "testTeamActive (check_networking_team.TestNetworking)",
-            "url": "http://fedorapeople.org/groups/cockpit/logs/pull-9230-20180524-150404-2e4fd7d3-verify-fedora-27/log",
-            "tracker": "https://api.github.com/repos/cockpit-project/cockpit/issues/8905",
-            "log": "...Error: timeout\nwait_js_cond(ph_in_text(\"#network-interface .panel:contains('tteam')\""
-         }
+        <pre>
+{
+    "pull": "https://api.github.com/repos/cockpit-project/cockpit/pulls/9230",
+    "revision": "2e4fd7d309b7f1c591c099e4041f8db20459c5ae",
+    "status": "failure",
+    "context": "verify/fedora-27",
+    "date": "2018-05-24T15:48:53Z",
+    "merged": true,
+    "test": "testTeamActive (check_networking_team.TestNetworking)",
+    "url": "http://fedorapeople.org/groups/cockpit/logs/pull-9230-20180524-150404-2e4fd7d3-verify-fedora-27/log",
+    "tracker": "https://api.github.com/repos/cockpit-project/cockpit/issues/8905",
+    "log": "...Error: timeout\nwait_js_cond(ph_in_text(\"#network-interface .panel:contains('tteam')\""
+ }</pre>
     </section>
 
     <section>
         The tests are essentially fuzzing Linux.
+        <aside class="notes">
+        </aside>
+    </section>
+
+    <section>
+        <img src="images/xkcd-machine-learning.png" style="width: 500px">
     </section>
 
     <!--
@@ -286,6 +296,13 @@ b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</
             <img src="images/20130502162127782.jpg">
         </section>
 
+    </section>
+
+    <section>
+        <section>
+            TODO Effects:
+        </section>
+
         <section>
             <h1>I want!</h1>
         </section>
@@ -309,22 +326,18 @@ Loading existing tests data
 </code></pre>
         </section>
 
+        <div style="text-align: left">
+            <h3 class="comment">What's next</h3>
+            <ul>
+                <li>Containerizing this</li>
+                <li>Allowing other projects to use it</li>
+            </ul>
+        </div>
+
     </section>
 
-        <section>
-            <h3 class="comment">Try out Machine Learning</h3>
-            <p>Use <code><a href="http://scikit-learn.org/">scikit-learn</a></code></p>
-        </section>
-
     <section>
-	What's next
-	* Containerizing this
-	* Allowing other projects to use it
-    </section>
-
-
-    <section>
-	<p>Ludicrous Claim: Any testing system that does not
+        <p><span class="comment">Ludicrous Claim</span>: Any testing system that does not
 	   have enough flakes, should introduce more tests or more mutations.</p>
     </section>
 
@@ -336,8 +349,9 @@ Loading existing tests data
         <h3 class="comment">#cockpit on FreeNode</h3>
         <p><tt></tt></p>
         <p class="credits">
-        <span class="comment">Credits:</span><br>
-        Clusters: Chire on Wikipedia<br>
+            <span class="comment">Credits:</span><br>
+            Clusters: Chire on Wikipedia<br>
+            CC BY-NC 2.5: Comic by XKCD.com<br>
         </p>
         </div>
     </section>
