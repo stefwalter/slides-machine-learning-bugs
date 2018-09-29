@@ -46,51 +46,47 @@
     </section>
 
     <section>
+        <div class="align">
+        <h3>Cockpit Integration Tests</h3>
         <pre>
-Total Runs:     2,466,742
+Real Failures:  +  42,764
+Known Issues:   +  54,371
+<span class="comment">Test Flakes:    +  25,420</span>
+-------------------------
 Test Failures:    122,555
-Test Flakes:       54,371
-Test Flakes:       25,420
-        </pre>
+-------------------------
+Total Runs:     2,466,742</pre>
 
-        <div style="text-align: left">
+        <div style="font-size: smaller;">
             <p>Data from last 90 days:<br>
             <a href="https://images-cockpit.apps.ci.centos.org/tests-train-1.jsonl.gz">https://images-cockpit.apps.ci.centos.org/tests-train-1.jsonl.gz</a></p>
         </div>
+        </div>
+        <aside class="notes">
+            5% of all tests fail
+            1% of all tests flake
+            TODO: Figure out how many actual tests flake
+        </aside>
     </section>
 
     <section>
-        <p>Testing <span class="comment">flakes are those bugs</span>. That entropy.</p>
-    </section>
-
-    <section>
-        This is a source of training data. We can watch what humans do.
-        <pre>
-{
+        <div class="align">
+            This is a source of training data
+            <pre>{
     "pull": "https://api.github.com/repos/cockpit-project/cockpit/pulls/9230",
     "revision": "2e4fd7d309b7f1c591c099e4041f8db20459c5ae",
     "status": "failure",
     "context": "verify/fedora-27",
     "date": "2018-05-24T15:48:53Z",
-    "merged": true,
+    <span class="comment">"merged": true,</span>
     "test": "testTeamActive (check_networking_team.TestNetworking)",
     "url": "http://fedorapeople.org/groups/cockpit/logs/pull-9230-20180524-150404-2e4fd7d3-verify-fedora-27/log",
     "tracker": "https://api.github.com/repos/cockpit-project/cockpit/issues/8905",
     "log": "...Error: timeout\nwait_js_cond(ph_in_text(\"#network-interface .panel:contains('tteam')\""
  }</pre>
+        </div>
     </section>
 
-    <section>
-        The tests are essentially fuzzing Linux.
-        <aside class="notes">
-        </aside>
-    </section>
-
-    <section>
-        <img src="images/xkcd-machine-learning.png" style="width: 500px">
-    </section>
-
-    <!--
     <section>
         <section data-state="complex">
             <table class="reasons">
@@ -216,30 +212,48 @@ Test Flakes:       25,420
             </table>
         </section>
     </section>
-    -->
 
     <section>
+        <p>Testing <span class="comment">flakes are those bugs</span>. That entropy.</p>
+    </section>
+
+    <section>
+        The tests are essentially fuzzing Linux.
+        <aside class="notes">
+        </aside>
+    </section>
+
+    <section>
+        <section data-state="title">
+            <h1 class="alt">Machine Learning</h1>
+        </section>
+
         <section>
+            <img src="images/xkcd-machine-learning.png" style="width: 500px">
+        </section>
+
+        <section>
+            <h3>Cluster the test failures</h3>
             <img src="images/cc-wikipedia-chire-SLINK-Gaussian-data.png" width="800px">
         </section>
 
         <section>
-            <h2 class="comment">ML techniques in use</h2>
-            <ul>
-                <li>Term Frequency - Inverse Document Frequency</li>
-                <li>Normalized Compression Distance</li>
-                <li>DBSCAN unsupervised clustering</li>
-                <li>K-nearest Neighbors classification</li>
-            </ul>
+            <div class="align">
+                <h2 class="comment">ML techniques in use</h2>
+                <ul>
+                    <li>Preprocessing</li>
+                    <li>Term Frequency - Inverse Document Frequency</li>
+                    <li>Normalized Compression Distance</li>
+                    <li>DBSCAN unsupervised clustering</li>
+                    <li>K-nearest Neighbors classification</li>
+                </ul>
+            </div>
         </section>
 
         <section>
-            <img src="images/Screenshot-2018-1-27 Cockpit Integration Tests.png" width="1200px">
-        </section>
-
-        <section>
-            <h2 class="comment">Term Frequency - Inverse Document Frequency</h2>
-<pre><code># ----------------------------------------------------------------------
+            <div class="align">
+                <h3 class="comment">Raw log input</h2>
+<pre># ----------------------------------------------------------------------
 # testTeam (check_networking_team.TestNetworking)
 #
 NAME         UUID                                  TYPE            DEVICE 
@@ -249,66 +263,153 @@ System eth1  9c92fad9-6ecb-3e6c-eb4d-8a47c6f50c04  802-3-ethernet  --
 
 52:54:01:00:00:03 -&gt; eth2
 52:54:01:00:00:03 -&gt; eth2
-52:54:01:00:00:04 -&gt; eth3
-52:54:01:00:00:04 -&gt; eth3
 not ok 139 testTeam (check_networking_team.TestNetworking) duration: 106s
 Traceback (most recent call last):
-  File \"/build/cockpit/bots/../test/verify/check-networking-team\", line 81, in testTeam
-    b.wait_present(\"#network-interface-slaves tr[data-interface='%s']\" % iface1)
-  File \"/build/cockpit/test/common/testlib.py\", line 230, in wait_present
+  File "/build/cockpit/bots/../test/verify/check-networking-team", line 81, in testTeam
+    b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface1)
+  File "/build/cockpit/test/common/testlib.py", line 230, in wait_present
     return self.wait_js_func('ph_is_present', selector)
-  File \"/build/cockpit/test/common/testlib.py\", line 224, in wait_js_func
-    return self.phantom.wait(\"%s(%s)\" % (func, ','.join(map(jsquote, args))))
-  File \"/build/cockpit/test/common/testlib.py\", line 821, in <lambda>
+  File "/build/cockpit/test/common/testlib.py", line 224, in wait_js_func
+    return self.phantom.wait("%s(%s)" % (func, ','.join(map(jsquote, args))))
+  File "/build/cockpit/test/common/testlib.py", line 821, in <lambda>
     return lambda *args: self._invoke(name, *args)
-  File \"/build/cockpit/test/common/testlib.py\", line 847, in _invoke
+  File "/build/cockpit/test/common/testlib.py", line 847, in _invoke
     raise Error(res['error'])
 Error: timeout
 
 Wrote TestNetworking-testTeam-rhel-7-127.0.0.2-2601-FAIL.png
 Wrote TestNetworking-testTeam-rhel-7-127.0.0.2-2601-FAIL.html
 Journal extracted to TestNetworking-testTeam-rhel-7-127.0.0.2-2601-FAIL.log
-Journal extracted to TestNetworking-testTeam-fedora-26-127.0.0.2-2602-FAIL.log</code></pre>
+Journal extracted to TestNetworking-testTeam-fedora-26-127.0.0.2-2602-FAIL.log</pre>
+            </div>
+        </section>
 
-<pre><code># testTeam (check_networking_team.TestNetworking)
+        <section>
+            <div class="align">
+                <h3 class="comment">Extracting the logs</h3>
+<pre># ----------------------------------------------------------------------
+# testTeam (check_networking_team.TestNetworking)
+#
 NAME         UUID                                  TYPE            DEVICE
-System eth000  000fb000bd000-000bb000-000ffb-000f000-d000edd000f000e000  000-000-ethernet  eth000
-virbr000       000faf-cb000b-000f000c-000eb000-000fc000a000ff000da  bridge          virbr000
-System eth000  000c000fad000-000ecb-000e000c-eb000d-000a000c000f000c000  000-000-ethernet  --
+System eth000  xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  000-000-ethernet  eth000
+virbr000       xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  bridge          virbr000
+System eth000  xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  000-000-ethernet  --
+
+000:000:000:000:000:000 -&gt; eth000
+000:000:000:000:000:000 -&gt; eth000
+not ok
+Traceback (most recent call last):
 File "check-networking-team", line 000, in testTeam
-b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</code></pre>
+b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)
+File "testlib.py", line 000, in wait_present
+return self.wait_js_func('ph_is_present', selector)
+File "testlib.py", line 000, in wait_js_func
+return self.phantom.wait("%s(%s)" % (func, ','.join(map(jsquote, args))))
+File "testlib.py", line 000, in <lambda>
+return lambda *args: self._invoke(name, *args)
+File "testlib.py", line 000, in _invoke
+raise Error(res['error'])
+Error: timeout
+
+Wrote png
+Wrote html
+Journal extracted to log
+Journal extracted to log</pre>
+            </div>
         </section>
 
         <section>
-            <h2 class="comment">Normalized Compression Distance</h2>
-            <img src="images/ncd.png">
-<pre class="fragment"><code>Z = lambda v: len(zlib.compress(v))</code></pre>
+            <div class="align">
+                <h3 class="comment">Term Frequency - Inverse Doc Frequency</h3>
+<pre># testTeam (check_networking_team.TestNetworking)
+virbr000       xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  bridge          virbr000
+File "check-networking-team", line 000, in testTeam
+b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</pre>
+            </div>
         </section>
 
         <section>
-            <h2 class="comment">DBSCAN</h2>
-            <p>Density-based spatial clustering of applications with noise</p>
-            <img src="images/1280px-DBSCAN-Illustration.svg.png">
+            <div class="align">
+                <h3 class="comment">Normalized Compression Distance</h3>
+                <img src="images/ncd.png">
+<pre class="fragment">Z = lambda v: len(zlib.compress(v))</pre>
+            </div>
         </section>
 
         <section>
-            <h2 class="comment">k-nearest neighbor</h2>
-            <img src="images/20130502162127782.jpg">
+            <div class="align">
+                <h3 class="comment">DBSCAN</h3>
+                <p>Density-based spatial clustering of applications with noise</p>
+                <img src="images/1280px-DBSCAN-Illustration.svg.png">
+            </div>
+        </section>
+
+        <section>
+            <div class="align">
+                <h2 class="comment">k-nearest neighbor</h2>
+                <img src="images/20130502162127782.jpg">
+            </div>
         </section>
 
     </section>
 
     <section>
-        <section>
-            TODO Effects:
+        <section data-state="title">
+            <h1 class="alt">Make it do something</h1>
         </section>
 
         <section>
-            <h1>I want!</h1>
+            <div class="align">
+                Auto-retrying flakey tests
+                <img src="images/retry-flakes.png">
+            </div>
         </section>
 
         <section>
-<pre><code>$ <strong>bots/image-download --state tests-learn-1.gz</strong>
+            <div class="align">
+                Annotate test logs
+                <img src="images/Screenshot-2018-1-27 Cockpit Integration Tests.png" width="1200px">
+        </section>
+
+        <section>
+            <div style="text-align: left;">
+                <h2>Real bugs</h2>
+                <ul>
+                    <li>
+                        <p><strong>Example: Shadow utils usage races</strong></p>
+                        <p><small>cluster-7-112.log<br>
+                            <a href="https://github.com/cockpit-project/cockpit/pull/9979">https://github.com/cockpit-project/cockpit/pull/9979</a></small></p>
+                    </li>
+                    <li>
+                        <p><strong>Example: Networkd + SELinux breaks the boot</strong></p>
+                        <p><small>cluster-124-4.log<br>
+                        No bug filed yet</small></p>
+                    </li>
+                    <li>
+                        <p><strong>Example: Race invalid update of UI state</strong></p>
+                        <p><small>cluster-95-28.log<br>
+                            <a href="https://github.com/cockpit-project/cockpit/pull/10127">https://github.com/cockpit-project/cockpit/pull/10127</a></small></p>
+                    </li>
+                    <li>
+                        <p><strong>Example: PackageKit crashing intermittently</strong></p>
+                        <p><small>cluster-14-34.log</br>
+                        No bug filed yet</small></p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </section>
+
+    <section>
+        <section data-state="title">
+            <h1 class="alt">I want!</h1>
+        </section>
+
+        <section>
+<pre>$ <strong>git clone git@github.com:cockpit-project/cockpit</strong>
+$ <strong>cd cockpit</strong></pre>
+<pre>$ <strong>bots/image-download --state tests-learn-1.gz</strong>
 ...
 $ <strong>bots/learn-tests --dry</strong>
 Loading existing tests data
@@ -316,23 +417,27 @@ Loading existing tests data
 ...
 100933632: Computed distances in 1181 seconds on 32 cores
 332: Clusters (13962 items, 246 noise)
-</code></pre>
+</pre>
 
-<pre><code>$ <strong>cat example-test.log | bots/tests-policy fedora-27</strong>
+<pre>$ <strong>cat example-test.log | bots/tests-policy fedora-27</strong>
 ...
 ...
 # Flake probability: 100.0% (neural network)
 # Flake likely 58.6% (clustering)
-</code></pre>
+</pre>
         </section>
 
-        <div style="text-align: left">
-            <h3 class="comment">What's next</h3>
-            <ul>
-                <li>Containerizing this</li>
-                <li>Allowing other projects to use it</li>
-            </ul>
-        </div>
+        <section>
+            <div style="text-align: left">
+                <h3 class="comment">What's next</h3>
+                <ul>
+                    <li>Containerizing this</li>
+                    <li>Allowing other projects to use it</li>
+                    <li>Filing bugs automatically</li>
+                    <li>Tracking known issues automatically<//li>
+                </ul>
+            </div>
+        </section>
 
     </section>
 

@@ -10,6 +10,34 @@
 }
 
 @font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600;
+  src: url(node_modules/typeface-montserrat/files/montserrat-latin-600.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  src: url(node_modules/typeface-montserrat/files/montserrat-latin-500.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: url(node_modules/typeface-montserrat/files/montserrat-latin-400.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 300;
+  src: url(node_modules/typeface-montserrat/files/montserrat-latin-300.woff2) format('woff2');
+}
+
+@font-face {
   font-family: 'Pacifico';
   font-style: normal;
   font-weight: 700;
@@ -24,11 +52,12 @@
 .reveal h6
 {
   font-family: "Montserrat", Impact, sans-serif;
-  font-weight: normal;
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 
+.reveal a,
 .reveal .comment {
     color: #e7ad52;
 }

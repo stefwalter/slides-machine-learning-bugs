@@ -120,6 +120,10 @@ p.reasons i {
     text-align: left;
 }
 
+.reveal div.align {
+    text-align: left;
+}
+
 .reveal .questions h1 {
     margin-bottom: 1em;
 }
@@ -162,4 +166,12 @@ html.overlay .reveal section {
     left: 0px;
     right: 0px;
     z-index: 0;
+}
+
+.reveal pre {
+    background-color: black;
+    color: white;
+    padding: 1.2em;
+    margin: 1em 0;
+    overflow: hidden;
 }
