@@ -23,8 +23,8 @@
 <div class="slides">
 
     <section data-state="title">
-        <h1>Machine Learning</h1>
-        <h1 class="comment">finding Linux bugs</h1>
+        <h1 class="alt">Machine Learning</h1>
+        <h2 class="comment">finding Linux bugs</h1>
         <br>
         <div style="margin-left: 5em; margin-right: 5em;">
             <h3 style="font-weight: normal;"><strong>Stef Walter</strong></h3>
@@ -245,6 +245,7 @@ Total Runs:     2,466,742</pre>
                     <li>Term Frequency - Inverse Document Frequency</li>
                     <li>Normalized Compression Distance</li>
                     <li>DBSCAN unsupervised clustering</li>
+                    <li>Multi-Dimensional Scaling</li>
                     <li>K-nearest Neighbors classification</li>
                 </ul>
             </div>
@@ -332,7 +333,7 @@ b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</
             <div class="align">
                 <h3 class="comment">Normalized Compression Distance</h3>
                 <img src="images/ncd.png">
-<pre class="fragment">Z = lambda v: len(zlib.compress(v))</pre>
+<pre class="fragment">Z = lambda v: len(lz4.frame.compress(v))</pre>
             </div>
         </section>
 
@@ -341,6 +342,13 @@ b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</
                 <h3 class="comment">DBSCAN</h3>
                 <p>Density-based spatial clustering of applications with noise</p>
                 <img src="images/1280px-DBSCAN-Illustration.svg.png">
+            </div>
+        </section>
+
+        <section>
+            <div class="align">
+                <h2 class="comment">Multi-Dimensional Scaling</h2>
+                <img src="images/mds-example.png">
             </div>
         </section>
 
@@ -372,6 +380,60 @@ b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</
         </section>
 
         <section>
+            <div class="align">
+                Curated set of non-flakey tests
+<pre>    0     verify/fedora-27 testBasic (check_ovirt.TestOVirtMachines)
+    0     verify/fedora-27 testBond (check_networking_bond.TestNetworking)
+    0     verify/fedora-27 testDeployDialog (check_kubernetes.TestNulecule)
+    0     verify/fedora-27 testDeployDialog (check_openshift.TestOpenshift)
+    0     verify/fedora-27 testDeployDialog (check_openshift.TestOpenshiftPrerelease)
+    0     verify/fedora-27 testDockerCommandInfo (check_openshift.TestRegistryPrerelease)
+    0     verify/fedora-27 testExternalConsole (check_machines.TestMachines)
+    0     verify/fedora-27 testIpa (check_realms.TestRealms)
+    0     verify/fedora-27 testKubevirtMachinesCreate (check_openshift.TestOpenshift)
+    0     verify/fedora-27 testLuks (check_storage_luks.TestStorage)
+    0     verify/fedora-27 testPendingClaim (check_kubernetes.TestKubernetes)
+    0     verify/fedora-27 testRaid (check_storage_mdraid.TestStorage)
+   50     verify/fedora-27 testBasic (check_apps.TestApps)
+   50     verify/fedora-27 testBasic (check_networking_basic.TestNetworking)
+   50     verify/fedora-27 testHostToMaintenance (check_ovirt.TestOVirtMachines)
+   50     verify/fedora-27 testKubevirtMachinesList (check_openshift.TestOpenshiftPrerelease)
+   50     verify/fedora-27 testProjectGroups (check_openshift.TestRegistryPrerelease)
+   60     verify/fedora-27 testBasic (check_kdump.TestKdump)
+  100     verify/fedora-27 testCheckpoint (check_networking_checkpoints.TestNetworking)
+  100     verify/fedora-27 testDosParts (check_storage_msdos.TestStorage)
+  100     verify/fedora-27 testISCSI (check_storage_iscsi.TestStorage)
+  100     verify/fedora-27 testKubevirtMachinesCreate (check_openshift.TestOpenshiftPrerelease)
+  100     verify/fedora-27 testKubevirtMachinesList (check_openshift.TestOpenshift)
+  100     verify/fedora-27 testKubevirtVmInstance (check_openshift.TestOpenshift)
+  100     verify/fedora-27 testPendingClaim (check_openshift.TestOpenshift)
+  100     verify/fedora-27 testPendingClaim (check_openshift.TestOpenshiftPrerelease)
+  100     verify/fedora-27 testProjectPolicy (check_openshift.TestRegistry)
+  100     verify/fedora-27 testUndeployKubevirt (check_openshift.TestOpenshift)
+  100     verify/fedora-27 testVCPU (check_ovirt.TestOVirtMachines)</pre>
+        </section>
+
+        <section>
+            <div class="align">
+                File issues for "big" bugs
+                <img src="images/auto-filing-a-bug.png">
+            </div>
+        </section>
+
+        <section>
+            <div class="align">
+                <a href="http://cockpit-expose-cockpit.apps.ci.centos.org/">http://cockpit-expose-cockpit.apps.ci.centos.org/</a>
+            </div>
+        </section>
+
+        <section>
+            <div class="align">
+                Visualization
+                <img src="images/clusters.png">
+            </div>
+        </section>
+
+        <section>
             <div style="text-align: left;">
                 <h2>Real bugs</h2>
                 <ul>
@@ -382,8 +444,7 @@ b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</
                     </li>
                     <li>
                         <p><strong>Example: Networkd + SELinux breaks the boot</strong></p>
-                        <p><small>cluster-124-4.log<br>
-                        No bug filed yet</small></p>
+                        <p><small>cluster-124-4.log</small></p>
                     </li>
                     <li>
                         <p><strong>Example: Race invalid update of UI state</strong></p>
@@ -407,37 +468,77 @@ b.wait_present("#network-interface-slaves tr[data-interface='%s']" % iface000)</
         </section>
 
         <section>
-<pre>$ <strong>git clone git@github.com:cockpit-project/cockpit</strong>
-$ <strong>cd cockpit</strong></pre>
-<pre>$ <strong>bots/image-download --state tests-learn-1.gz</strong>
-...
-$ <strong>bots/learn-tests --dry</strong>
+            <a href="https://github.com/cockpit-project/cockpituous/tree/master/learn">https://github.com/cockpit-project/cockpituous/tree/master/learn</a>
+        </section>
+
+        <section>
+            <h3 class="comment">Use it yourself</h3>
+<pre>$ <strong>git clone git@github.com:cockpit-project/cockpituous</strong>
+$ <strong>cd cockpituous</strong></pre>
+<pre>$ <strong>./train-tests -v test-example.jsonl.gz</strong>
 Loading existing tests data
 14208: Items to train
 ...
 100933632: Computed distances in 1181 seconds on 32 cores
 332: Clusters (13962 items, 246 noise)
+$ <strong>./predict-tests -v test-predict.jsonl</strong>
+{
+    "test": [ [ "testTeamActive", 2 ], [ "testTeamBond", 5 ] ],
+    "status": [ [ "failure", 7 ] ],
+    "context": [ [ "verify/fedora-27", 3 ], [ "verify/fedora-27", 4 ] ],
+    "date": [ "2018-05-24T15:48:53Z", "2018-05-30T01:01:30Z" ],
+    <span class="comment">"merged": [ [ true, 5 ], [ false, 1 ], [ null, 1 ], ],</span>
+    "tracker": [ [ "https://api.github.com/repos/cockpit-project/cockpit/issues/8905", 3 ] [ null, 4 ] ]
+}
 </pre>
+        </section>
 
-<pre>$ <strong>cat example-test.log | bots/tests-policy fedora-27</strong>
-...
-...
-# Flake probability: 100.0% (neural network)
-# Flake likely 58.6% (clustering)
-</pre>
+        <section>
+            <h3 class="comment">Use it with Kubernetes</h3>
+<pre>$ <strong>kubectl create -f learn/cockpit-learn.yaml</strong></pre>
+<pre>$ <strong>curl --progress-bar --fail --upload-file learn/test-example.jsonl.gz \
+    http://cockpit-learn.project.srv.cluster.local/train/test-example.jsonl.gz</strong></pre>
+<pre>$ <strong>curl -d '@learn/test-predict.jsonl' \
+    http://cockpit-learn.project.srv.cluster.local/predict</strong></pre>
         </section>
 
         <section>
             <div style="text-align: left">
                 <h3 class="comment">What's next</h3>
                 <ul>
-                    <li>Containerizing this</li>
-                    <li>Allowing other projects to use it</li>
-                    <li>Filing bugs automatically</li>
-                    <li>Producing a curated set of non-flakey tests</li>
+                    <li><a href="https://github.com/cockpit-project/cockpituous/pull/232">Retrieving data automatically</a></li>
                     <li>Tracking known issues automatically</li>
                 </ul>
             </div>
+        </section>
+
+    </section>
+
+    <section>
+
+        <section data-state="title">
+            <h1 class="alt">The Kernel Oraculum</h1>
+            <p style="comment">Rado Vbrovsky, Red Hat</p>
+        </section>
+
+        <section>
+            <table>
+                <tr>
+                    <td><img style="width: 1500px !important" src="images/Ananas.png"></td>
+                    <td><img style="width: 1000px !important" src="images/Apple.png"></td>
+                    <td><img style="width: 1000px !important" src="images/Pear.png"></td>
+                    <td><img style="width: 1000px !important" src="images/Orange.png"></td>
+                    <td><img style="width: 1000px !important" src="images/walnut.png"></td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <img src="images/ilovelucycandyfactorygif.gif">
+        </section>
+
+        <section>
+            <img src="images/Oraculum_diff.png">
         </section>
 
     </section>
